@@ -17,10 +17,20 @@ export default function App() {
     setTextItem('')
   }
 
+  const onSelectItemHandler = (id) => {
+    setModalVisible(!modalVisible)
+    setItemSelectedToDelete(itemList.find((item)=>item.id===id))
+  }
+
+  const onDeleteItemHandler = () => {
+    setItemList(itemList.filter((item)=>item.id!==itemSelectedToDelete.id))
+    setModalVisible(!modalVisible)
+  }
+
   const renderListItem = ({item})=>(
       <View style={styles.itemList}>
         <Text>{item.value}</Text>
-        <Button title="x" />
+        <Button title="x" onPress={()=>onSelectItemHandler(item.id)} />
       </View>
     )
   
@@ -50,14 +60,14 @@ export default function App() {
         keyExtractor={item=>item.id}
       />
     </View>
-    <Modal animationType="slide" visible={true}>
+    <Modal animationType="slide" visible={modalVisible}>
       <View style={styles.modalMessageContainer}>
         <Text>Se eliminará: </Text>
         <Text>{itemSelectedToDelete.value}</Text>
       </View>
       <View style={styles.modalButtonContainer}>
-        <Button title="Cancelar" color="#ccc" />
-        <Button title="Si, eliminar" color="#ef233c" />
+        <Button title="Cancelar" color="#ccc" onPress={()=>setModalVisible(!modalVisible)} />
+        <Button title="Si, eliminar" color="#ef233c" onPress={()=>onDeleteItemHandler()}/>
       </View>
     </Modal>
     </>
